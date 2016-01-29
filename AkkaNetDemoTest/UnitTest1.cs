@@ -1,5 +1,5 @@
-﻿using System;
-using AkkaNetDemo;
+﻿using AkkaNetDemo;
+using AkkaNetDemo.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AkkaNetDemoTest
@@ -10,8 +10,13 @@ namespace AkkaNetDemoTest
         [TestMethod]
         public void BuyTest()
         {
-            var house = new BrokerageHouse();
-            house.Buy("IBM", 125);
+            FinancialPlanner.Trade("IBM", 125, TradeType.Buy);
+        }
+
+        [TestMethod]
+        public void OverTradeLimitTest()
+        {
+            FinancialPlanner.Trade("IBM", 500, TradeType.Buy);
         }
     }
 }
