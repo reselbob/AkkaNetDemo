@@ -8,7 +8,6 @@ namespace AkkaNetDemo
     public class StockBroker : UntypedActor
     {
   
- 
         protected override void OnReceive(object message)
         {
             var trade = message as AbstractTrade;
@@ -19,16 +18,16 @@ namespace AkkaNetDemo
                 {
                     if (trade.Type.Equals(TradeType.Sell))
                     {
-                        var sellTrader = Context.ActorOf(Props.Create(() => new Trader()), "MySellTrader");
+                        var sellTrader = Context.ActorOf(Props.Create(() => new FloorTrader()), "SellTrader");
                         sellTrader.Forward(trade);
                     }
                     else
                     {
-                        var buyTrader = Context.ActorOf(Props.Create(() => new Trader()), "buyTrader");
+                        var buyTrader = Context.ActorOf(Props.Create(() => new FloorTrader()), "BuyTrader");
                         buyTrader.Forward(trade);
                     }
                 }
-                //if (trade.TradeStatus.Equals(TradeStatus.Success) ||trade.TradeStatus.Equals(TradeStatus.Fail))
+                //if (trade.TradeStatus.Equals(TradeStatus.Success) || trade.TradeStatus.Equals(TradeStatus.Fail))
                 //{
                 //    Sender.Tell(trade);
                 //}

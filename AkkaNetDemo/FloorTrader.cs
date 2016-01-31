@@ -3,7 +3,7 @@ using AkkaNetDemo.Messages;
 
 namespace AkkaNetDemo
 {
-    public class Trader : UntypedActor
+    public class FloorTrader : UntypedActor
     {
         private const int TradingLimit = 200;
 
