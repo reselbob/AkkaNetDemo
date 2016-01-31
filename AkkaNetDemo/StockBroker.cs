@@ -1,62 +1,47 @@
-﻿using System;
-using Akka.Actor;
-using AkkaNetDemo.Exceptions;
+﻿using Akka.Actor;
 using AkkaNetDemo.Messages;
 
 namespace AkkaNetDemo
 {
+    /// <summary>
+    ///     An object the describes a Stock Broker. A StockBroker will
+    ///     use an <see cref="FloorTrader" /> to execute a trade.
+    /// </summary>
     public class StockBroker : UntypedActor
     {
-  
+        /// <summary>
+        ///     This overrideen method provides the behavior a StockBroker executes
+        ///     upon receipt of a message. If the <see cref="Trade" /> message's
+        ///     <see cref="TradeType" /> = TradeType.Sell, the StockBroker
+        ///     creates a Sell <see cref="FloorTrader" /> and calls
+        ///     <see cref="UntypedActor" />.Forward() to pass the Trade message
+        ///     on.
+        ///     If the Trade is TradeType.Buy, a Buy Floor Trader is created and
+        ///     the Trade message is forwarded.
+        /// </summary>
+        /// <param name="message">The <see cref="Trade" /> message to process</param>
         protected override void OnReceive(object message)
         {
             var trade = message as AbstractTrade;
 
             if (trade != null)
             {
+                //Make sure you are processing only open trades
                 if (trade.TradeStatus.Equals(TradeStatus.Open))
                 {
-                    if (trade.Type.Equals(TradeType.Sell))
+                    if (trade.TradeType.Equals(TradeType.Sell))
                     {
-                        var sellTrader = Context.ActorOf(Props.Create(() => new FloorTrader()), "SellTrader");
+                        //create the Sell FloorTrader and forward the message
+                        var sellTrader = Context.ActorOf(Props.Create(() => new FloorTrader()), "SellFloorTrader");
                         sellTrader.Forward(trade);
                     }
                     else
                     {
-                        var buyTrader = Context.ActorOf(Props.Create(() => new FloorTrader()), "BuyTrader");
+                        //create the Buy FloorTrader and forward the message
+                        var buyTrader = Context.ActorOf(Props.Create(() => new FloorTrader()), "BuyFloorTrader");
                         buyTrader.Forward(trade);
                     }
                 }
-                //if (trade.TradeStatus.Equals(TradeStatus.Success) || trade.TradeStatus.Equals(TradeStatus.Fail))
-                //{
-                //    Sender.Tell(trade);
-                //}
-                
-            }
-        }
-
-        protected override SupervisorStrategy SupervisorStrategy()
-        {
-            {
-                return new OneForOneStrategy(2, TimeSpan.FromSeconds(30), x =>
-                {
-                    if (x is TradeLimitException)
-                    {
-                        //var trade = ((TradeLimitException) x).Trade;
-                        //trade.TradeStatus = TradeStatus.Fail;
-                        //trade.Message =
-                        //    string.Format(
-                        //        "The trader says that there is a trade limit violation. You cannot trade {0} shares",
-                        //        ((TradeLimitException) x).Trade.Shares);
-                        //trade.LastActive = DateTime.UtcNow;
-                        //trade.TradeHistory.Add(new TradeHistoryItem(trade.LastActive, trade.Message, trade.TradeStatus,
-                        //    Self.Path.ToStringWithAddress()));
-                        ////Context.Parent.Tell(trade);
-                        ////return Directive.Stop;
-                    }
-
-                    return Directive.Resume;
-                });
             }
         }
     }

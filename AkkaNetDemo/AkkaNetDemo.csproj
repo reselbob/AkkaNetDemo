@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\TradeLimitException.cs" />
     <Compile Include="TradingSystem.cs" />
     <Compile Include="FloorTrader.cs" />
     <Compile Include="Messages\Messages.cs" />
@@ -57,6 +56,9 @@
   <ItemGroup>
     <None Include="AkkNetDemo.cd" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
