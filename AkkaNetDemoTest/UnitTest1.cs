@@ -10,13 +10,13 @@ namespace AkkaNetDemoTest
         [TestMethod]
         public void BuyTest()
         {
-            FinancialPlanner.Trade("IBM", 125, TradeType.Buy);
+            TradingSystem.Trade("IBM", 125, TradeType.Buy);
         }
 
         [TestMethod]
         public void OverTradeLimitTest()
         {
-            FinancialPlanner.Trade("IBM", 500, TradeType.Buy);
+            TradingSystem.Trade("IBM", 500, TradeType.Buy);
         }
     }
 }
